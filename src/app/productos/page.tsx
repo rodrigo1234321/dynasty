@@ -20,42 +20,16 @@ function CatalogGridSkeleton() {
 }
 
 function CatalogContent() {
-  const router = useRouter();
   const searchParams = useSearchParams();
 
-  // Read initial category from URL, but manage via state for instant UI updates
   const requestedCategory = searchParams.get('category');
-  const initialCategory =
+  const activeCategory =
     requestedCategory && CATEGORIES.some((c) => c.slug === requestedCategory)
       ? requestedCategory
       : 'all';
 
-  const [activeCategory, setActiveCategory] = useState<string>(initialCategory);
-
-  // Sync state if URL changes externally (e.g. browser back/forward buttons)
-  useEffect(() => {
-    const current = searchParams.get('category') || 'all';
-    if (current !== activeCategory && (current === 'all' || CATEGORIES.some((c) => c.slug === current))) {
-      setActiveCategory(current);
-    }
-  }, [searchParams, activeCategory]);
-
   const filteredProducts =
     activeCategory === 'all' ? products : getProductsByCategory(activeCategory);
-
-  const handleCategoryChange = (category: string) => {
-    setActiveCategory(category); // Instant UI update
-    
-    // Update URL silently
-    const params = new URLSearchParams(searchParams.toString());
-    if (category === 'all') {
-      params.delete('category');
-    } else {
-      params.set('category', category);
-    }
-    const query = params.toString();
-    router.replace(query ? `/productos?${query}` : '/productos', { scroll: false });
-  };
 
   return (
     <div className="pt-32 pb-24 px-4 md:px-8 max-w-7xl mx-auto min-h-screen">
@@ -64,10 +38,7 @@ function CatalogContent() {
           PRODUCTS
         </h1>
 
-        <CategoryChips
-          activeCategory={activeCategory}
-          onCategoryChange={handleCategoryChange}
-        />
+        <CategoryChips activeCategory={activeCategory} />
       </header>
 
       <div className="mb-6 flex justify-between items-center text-sm font-mono text-text-muted">
