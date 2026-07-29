@@ -1,6 +1,6 @@
 'use client';
 
-import { Suspense } from 'react';
+import { Suspense, useState, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { CategoryChips } from '@/components/shop/CategoryChips';
 import { ProductGrid } from '@/components/shop/ProductGrid';
@@ -23,18 +23,30 @@ function CatalogContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  // Read the category straight from the URL so links like
-  // /productos?category=audio (used across the site's navigation) actually filter.
+  // Read initial category from URL, but manage via state for instant UI updates
   const requestedCategory = searchParams.get('category');
-  const activeCategory =
+  const initialCategory =
     requestedCategory && CATEGORIES.some((c) => c.slug === requestedCategory)
       ? requestedCategory
       : 'all';
+
+  const [activeCategory, setActiveCategory] = useState<string>(initialCategory);
+
+  // Sync state if URL changes externally (e.g. browser back/forward buttons)
+  useEffect(() => {
+    const current = searchParams.get('category') || 'all';
+    if (current !== activeCategory && (current === 'all' || CATEGORIES.some((c) => c.slug === current))) {
+      setActiveCategory(current);
+    }
+  }, [searchParams, activeCategory]);
 
   const filteredProducts =
     activeCategory === 'all' ? products : getProductsByCategory(activeCategory);
 
   const handleCategoryChange = (category: string) => {
+    setActiveCategory(category); // Instant UI update
+    
+    // Update URL silently
     const params = new URLSearchParams(searchParams.toString());
     if (category === 'all') {
       params.delete('category');
@@ -66,7 +78,7 @@ function CatalogContent() {
 
       {filteredProducts.length === 0 && (
         <div className="text-center py-24 text-text-muted">
-          No se encontraron productos en esta categoría.
+          No se encontraron productos en esta categor&iacute;a.
         </div>
       )}
     </div>
