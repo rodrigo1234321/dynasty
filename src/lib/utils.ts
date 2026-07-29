@@ -18,3 +18,13 @@ export function formatInstallments(price: number, installments: number = 3): str
   const installmentPrice = Math.ceil(price / installments);
   return `${installments}x ${formatPrice(installmentPrice)} sin interés`;
 }
+
+export function getImagePath(src: string): string {
+  if (!src) return '';
+  if (src.startsWith('http://') || src.startsWith('https://') || src.startsWith('data:')) return src;
+  const basePath = process.env.NEXT_PUBLIC_BASE_PATH || '';
+  if (basePath && src.startsWith('/') && !src.startsWith(basePath)) {
+    return `${basePath}${src}`;
+  }
+  return src;
+}

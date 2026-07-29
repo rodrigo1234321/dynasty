@@ -14,6 +14,9 @@ const nextConfig: NextConfig = {
   },
   basePath: repo ? `/${repo}` : '',
   assetPrefix: repo ? `/${repo}/` : undefined,
+  env: {
+    NEXT_PUBLIC_BASE_PATH: repo ? `/${repo}` : '',
+  },
 };
 
 export default nextConfig;
