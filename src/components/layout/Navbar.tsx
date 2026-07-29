@@ -1,14 +1,16 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
 import { Menu, Search, Heart, ShoppingBag } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useCartStore } from '@/store/useCartStore';
 import { useUIStore } from '@/store/useUIStore';
+import { useHydration } from '@/hooks/useHydration';
 
 export function Navbar() {
+  const isHydrated = useHydration();
   const [isScrolled, setIsScrolled] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
@@ -77,11 +79,19 @@ export function Navbar() {
           </button>
           <button onClick={toggleCart} className="p-1 hover:text-primary transition-colors text-white relative">
             <ShoppingBag className="w-5 h-5" />
-            {itemCount > 0 && (
-              <span className="absolute -top-1 -right-1 bg-primary text-white text-[10px] w-4 h-4 rounded-full flex items-center justify-center font-mono">
-                {itemCount}
-              </span>
-            )}
+            <AnimatePresence>
+              {isHydrated && itemCount > 0 && (
+                <motion.span 
+                  initial={{ scale: 0 }}
+                  animate={{ scale: 1 }}
+                  exit={{ scale: 0 }}
+                  key={itemCount}
+                  className="absolute -top-1 -right-1 bg-primary text-white text-[10px] w-4 h-4 rounded-full flex items-center justify-center font-mono"
+                >
+                  {itemCount}
+                </motion.span>
+              )}
+            </AnimatePresence>
           </button>
         </div>
       </div>

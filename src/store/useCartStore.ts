@@ -16,9 +16,24 @@ export const useCartStore = create<CartState>()(
           );
           
           if (existingItemIndex > -1) {
+            const currentItem = state.items[existingItemIndex];
+
+            // Check stock limit if maxStock is provided
+            const nextQuantity = currentItem.quantity + newItem.quantity;
+            const clampedQuantity =
+              currentItem.maxStock !== undefined && nextQuantity > currentItem.maxStock
+                ? currentItem.maxStock
+                : nextQuantity;
+
             const newItems = [...state.items];
-            newItems[existingItemIndex].quantity += newItem.quantity;
+            newItems[existingItemIndex] = { ...currentItem, quantity: clampedQuantity };
+
             return { items: newItems };
+          }
+          
+          // Ensure we don't add more than maxStock initially
+          if (newItem.maxStock !== undefined && newItem.quantity > newItem.maxStock) {
+            newItem.quantity = newItem.maxStock;
           }
           return { items: [...state.items, newItem] };
         });
@@ -32,7 +47,11 @@ export const useCartStore = create<CartState>()(
         set((state) => ({
           items: state.items.map((item) => {
             if (item.productId === productId && item.size === size) {
-              return { ...item, quantity: Math.max(1, quantity) };
+              let nextQuantity = Math.max(1, quantity);
+              if (item.maxStock !== undefined && nextQuantity > item.maxStock) {
+                nextQuantity = item.maxStock;
+              }
+              return { ...item, quantity: nextQuantity };
             }
             return item;
           }),

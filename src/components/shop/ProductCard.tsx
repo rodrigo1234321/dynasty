@@ -22,6 +22,10 @@ export function ProductCard({ product }: { product: Product }) {
   const handleQuickAdd = (e: React.MouseEvent, size: Size) => {
     e.preventDefault();
     e.stopPropagation();
+    
+    const variant = product.variants.find(v => v.size === size);
+    if (!variant || !variant.inStock) return;
+    
     addItem({
       productId: product.id,
       slug: product.slug,
@@ -30,6 +34,7 @@ export function ProductCard({ product }: { product: Product }) {
       image: product.images[0] || '',
       quantity: 1,
       size,
+      maxStock: variant.stock,
     });
     toggleCart();
   };

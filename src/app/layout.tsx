@@ -15,16 +15,16 @@ export const metadata: Metadata = {
     template: "%s | DYNASTY",
   },
   description:
-    "DYNASTY — Streetwear brand from Mar del Plata, Argentina. Built Different. Hoodies, tees, and accessories for those who refuse to conform.",
+    "DYNASTY — Tech & Gadgets from Mar del Plata, Argentina. Built Different. Audio, gaming, energy, and more for your setup.",
   keywords: [
     "dynasty",
-    "streetwear",
-    "built different",
-    "hoodies",
+    "tecnologia",
+    "gadgets",
+    "audio",
+    "gaming",
     "argentina",
     "mar del plata",
-    "urban fashion",
-    "ropa urbana",
+    "setup",
   ],
   authors: [{ name: "DYNASTY" }],
   openGraph: {
@@ -34,7 +34,7 @@ export const metadata: Metadata = {
     siteName: "DYNASTY",
     title: "DYNASTY — Built Different",
     description:
-      "Streetwear brand from Mar del Plata. Built Different.",
+      "Tech & Gadgets from Mar del Plata. Built Different.",
     images: [
       {
         url: "/brand/og-default.jpg",
@@ -48,7 +48,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "DYNASTY — Built Different",
     description:
-      "Streetwear brand from Mar del Plata. Built Different.",
+      "Tech & Gadgets from Mar del Plata. Built Different.",
   },
   robots: {
     index: true,

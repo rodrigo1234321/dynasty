@@ -6,7 +6,7 @@ import { X, Trash2, Minus, Plus } from 'lucide-react';
 import Link from 'next/link';
 import { useCartStore } from '@/store/useCartStore';
 import { useUIStore } from '@/store/useUIStore';
-import { formatPrice } from '@/lib/utils';
+import { formatPrice, formatInstallments } from '@/lib/utils';
 import Image from 'next/image';
 
 export function CartDrawer() {
@@ -47,68 +47,94 @@ export function CartDrawer() {
               {items.length === 0 ? (
                 <div className="h-full flex flex-col items-center justify-center text-center space-y-4">
                   <p className="text-text-secondary font-medium">Tu carrito está vacío</p>
-                  <button 
+                  <Link
+                    href="/productos"
                     onClick={toggleCart}
                     className="text-sm font-medium border border-border-subtle px-6 py-3 hover:bg-surface-2 transition-colors uppercase tracking-wider text-text-primary"
                   >
                     EXPLORAR PRODUCTOS
-                  </button>
+                  </Link>
                 </div>
               ) : (
-                <ul className="space-y-6">
-                  {items.map((item) => (
-                    <li key={`${item.productId}-${item.size}`} className="flex gap-4">
-                      <div className="relative w-20 h-24 bg-surface-2 overflow-hidden flex-shrink-0 flex items-center justify-center text-text-muted font-mono text-xs">
-                        {item.image ? (
-                          <Image 
-                            src={item.image} 
-                            alt={item.name} 
-                            fill 
-                            className="object-cover"
-                            unoptimized={true}
-                          />
-                        ) : (
-                          'DYG'
-                        )}
-                      </div>
-                      
-                      <div className="flex-1 flex flex-col">
-                        <div className="flex justify-between items-start gap-2">
-                          <h3 className="font-medium text-sm text-white line-clamp-2">{item.name}</h3>
-                          <button 
-                            onClick={() => removeItem(item.productId, item.size)}
-                            className="text-text-muted hover:text-primary transition-colors p-1"
-                          >
-                            <Trash2 className="w-4 h-4" />
-                          </button>
+                  <motion.ul 
+                    className="space-y-6"
+                    initial="hidden"
+                    animate="show"
+                    variants={{
+                      hidden: { opacity: 0 },
+                      show: {
+                        opacity: 1,
+                        transition: {
+                          staggerChildren: 0.1
+                        }
+                      }
+                    }}
+                  >
+                    {items.map((item) => (
+                      <motion.li 
+                        key={`${item.productId}-${item.size}`} 
+                        className="flex gap-4"
+                        variants={{
+                          hidden: { opacity: 0, x: 20 },
+                          show: { opacity: 1, x: 0 }
+                        }}
+                        layout
+                      >
+                        <div className="relative w-20 h-24 bg-surface-2 overflow-hidden flex-shrink-0 flex items-center justify-center text-text-muted font-mono text-xs">
+                          {item.image ? (
+                            <Image 
+                              src={item.image} 
+                              alt={item.name} 
+                              fill 
+                              className="object-cover"
+                              unoptimized={true}
+                            />
+                          ) : (
+                            'DYG'
+                          )}
                         </div>
                         
-                        <p className="text-text-secondary text-xs mt-1">Talle: {item.size}</p>
-                        
-                        <div className="mt-auto flex items-center justify-between">
-                          <div className="flex items-center border border-border-subtle">
+                        <div className="flex-1 flex flex-col">
+                          <div className="flex justify-between items-start gap-2">
+                            <h3 className="font-medium text-sm text-white line-clamp-2">{item.name}</h3>
                             <button 
-                              onClick={() => updateQuantity(item.productId, item.size, item.quantity - 1)}
-                              className="p-1 hover:bg-surface-2 text-text-secondary hover:text-white transition-colors disabled:opacity-50"
-                              disabled={item.quantity <= 1}
+                              onClick={() => removeItem(item.productId, item.size)}
+                              className="text-text-muted hover:text-primary transition-colors p-1"
                             >
-                              <Minus className="w-4 h-4" />
-                            </button>
-                            <span className="w-8 text-center text-sm font-mono">{item.quantity}</span>
-                            <button 
-                              onClick={() => updateQuantity(item.productId, item.size, item.quantity + 1)}
-                              className="p-1 hover:bg-surface-2 text-text-secondary hover:text-white transition-colors"
-                            >
-                              <Plus className="w-4 h-4" />
+                              <Trash2 className="w-4 h-4" />
                             </button>
                           </div>
                           
-                          <span className="font-mono text-sm">{formatPrice(item.price)}</span>
+                          <p className="text-text-secondary text-xs mt-1">Talle: {item.size}</p>
+                          {item.maxStock !== undefined && item.quantity >= item.maxStock && (
+                            <p className="text-primary text-[10px] uppercase font-mono mt-0.5">Stock máximo alcanzado</p>
+                          )}
+                          
+                          <div className="mt-auto flex items-center justify-between">
+                            <div className="flex items-center border border-border-subtle">
+                              <button 
+                                onClick={() => updateQuantity(item.productId, item.size, item.quantity - 1)}
+                                className="p-1 hover:bg-surface-2 text-text-secondary hover:text-white transition-colors disabled:opacity-50"
+                                disabled={item.quantity <= 1}
+                              >
+                                <Minus className="w-4 h-4" />
+                              </button>
+                              <span className="w-8 text-center text-sm font-mono">{item.quantity}</span>
+                              <button 
+                                onClick={() => updateQuantity(item.productId, item.size, item.quantity + 1)}
+                                className="p-1 hover:bg-surface-2 text-text-secondary hover:text-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                                disabled={item.maxStock !== undefined && item.quantity >= item.maxStock}
+                              >
+                                <Plus className="w-4 h-4" />
+                              </button>
+                            </div>
+                            
+                            <span className="font-mono text-sm">{formatPrice(item.price)}</span>
+                          </div>
                         </div>
-                      </div>
-                    </li>
-                  ))}
-                </ul>
+                      </motion.li>
+                    ))}
+                  </motion.ul>
               )}
             </div>
             
@@ -127,7 +153,7 @@ export function CartDrawer() {
                 </Link>
                 
                 <p className="text-center text-xs text-text-muted font-mono">
-                  3 cuotas sin interés de <span className="font-mono text-text-secondary">{formatPrice(totalPrice() / 3)}</span>
+                  {formatInstallments(totalPrice())}
                 </p>
               </div>
             )}

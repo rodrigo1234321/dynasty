@@ -4,13 +4,13 @@ import { useState } from 'react';
 import { Truck } from 'lucide-react';
 import { formatPrice } from '@/lib/utils';
 import { useCartStore } from '@/store/useCartStore';
+import { FREE_SHIPPING_THRESHOLD } from '@/lib/constants';
 
 export function ShippingCalculator() {
   const [zipCode, setZipCode] = useState('');
   const [result, setResult] = useState<number | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const totalPrice = useCartStore((state) => state.totalPrice());
-  const FREE_SHIPPING_THRESHOLD = 120000;
 
   const handleCalculate = (e: React.FormEvent) => {
     e.preventDefault();

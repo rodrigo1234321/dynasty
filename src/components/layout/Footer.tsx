@@ -16,7 +16,7 @@ export function Footer() {
               Built Different
             </p>
             <p className="text-text-secondary text-sm mt-4 max-w-sm leading-relaxed">
-              Premium streetwear from Argentina. Archival quality, modern cuts. Join the movement.
+              Tech & gadgets from Mar del Plata, Argentina. Built Different.
             </p>
           </div>
 
@@ -38,10 +38,8 @@ export function Footer() {
           <div className="flex flex-col space-y-4">
             <h4 className="font-display text-white uppercase tracking-wider mb-2">Help</h4>
             <ul className="space-y-3">
-              <li><Link href="/size-guide" className="text-sm text-text-secondary hover:text-white transition-colors">Size Guide</Link></li>
-              <li><Link href="/shipping" className="text-sm text-text-secondary hover:text-white transition-colors">Shipping Info</Link></li>
-              <li><Link href="/returns" className="text-sm text-text-secondary hover:text-white transition-colors">Returns & Exchanges</Link></li>
-              <li><Link href="/contact" className="text-sm text-text-secondary hover:text-white transition-colors">Contact Us</Link></li>
+              <li><Link href="/envios" className="text-sm text-text-secondary hover:text-white transition-colors">Shipping Info</Link></li>
+              <li><Link href="/contacto" className="text-sm text-text-secondary hover:text-white transition-colors">Contact Us</Link></li>
             </ul>
           </div>
 

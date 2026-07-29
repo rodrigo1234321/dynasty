@@ -1,8 +1,8 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useSyncExternalStore } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { cn } from '@/lib/utils';
+import { useHydration } from '@/hooks/useHydration';
 
 interface CRTPreloaderProps {
   onComplete?: () => void;
@@ -14,19 +14,31 @@ const BOOT_TEXTS = [
   'BUILT DIFFERENT'
 ];
 
+const emptySubscribe = () => () => {};
+
 export function CRTPreloader({ onComplete }: CRTPreloaderProps) {
-  const [isVisible, setIsVisible] = useState(true);
+  const mounted = useHydration();
   const [textIndex, setTextIndex] = useState(0);
   const [progress, setProgress] = useState(0);
-  const [mounted, setMounted] = useState(false);
+  const [dismissed, setDismissed] = useState(false);
+
+  // Read once, synchronously: returning visitors and reduced-motion users
+  // skip the animated intro. Deriving this via useSyncExternalStore (instead
+  // of an effect + setState) keeps it out of render-then-setState territory.
+  const shouldSkipIntro = useSyncExternalStore(
+    emptySubscribe,
+    () =>
+      Boolean(sessionStorage.getItem('dynasty_visited')) ||
+      window.matchMedia('(prefers-reduced-motion: reduce)').matches,
+    () => false
+  );
+
+  const showIntro = mounted && !shouldSkipIntro && !dismissed;
 
   useEffect(() => {
-    setMounted(true);
-    const hasVisited = sessionStorage.getItem('dynasty_visited');
-    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (!mounted) return;
 
-    if (hasVisited || prefersReducedMotion) {
-      setIsVisible(false);
+    if (shouldSkipIntro) {
       onComplete?.();
       return;
     }
@@ -47,7 +59,7 @@ export function CRTPreloader({ onComplete }: CRTPreloaderProps) {
 
     const timeout = setTimeout(() => {
       sessionStorage.setItem('dynasty_visited', 'true');
-      setIsVisible(false);
+      setDismissed(true);
       onComplete?.();
     }, 2800);
 
@@ -56,13 +68,13 @@ export function CRTPreloader({ onComplete }: CRTPreloaderProps) {
       clearInterval(progressInterval);
       clearTimeout(timeout);
     };
-  }, [onComplete]);
+  }, [mounted, shouldSkipIntro, onComplete]);
 
   if (!mounted) return null;
 
   return (
     <AnimatePresence>
-      {isVisible && (
+      {showIntro && (
         <motion.div
           className="fixed inset-0 z-[60] flex flex-col items-center justify-center bg-black overflow-hidden pointer-events-none"
           initial={{ scaleY: 0.005, opacity: 1 }}

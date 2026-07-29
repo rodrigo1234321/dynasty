@@ -1,13 +1,20 @@
+'use client';
+
 import { HeroBanner } from '@/components/brand/HeroBanner';
 import { ProductGrid } from '@/components/shop/ProductGrid';
 import { Reveal } from '@/components/motion/Reveal';
-import { products } from '@/lib/products';
+import { products, getProductsByCategory } from '@/lib/products';
 import { MapPin } from 'lucide-react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/Button';
 
 export default function HomePage() {
   const featuredProducts = products.filter(p => p.featured).slice(0, 4);
+  const categories = [
+    { id: 'audio', name: 'AUDIO' },
+    { id: 'energia', name: 'ENERGÍA' },
+    { id: 'gaming', name: 'GAMING & SISTEMAS' },
+  ];
   
   return (
     <div className="min-h-screen">
@@ -19,7 +26,7 @@ export default function HomePage() {
           <Reveal>
             <div className="flex justify-between items-end mb-12">
               <h2 className="font-display text-3xl md:text-4xl uppercase tracking-wider">
-                NEW DROPS
+                NUEVOS INGRESOS
               </h2>
               <Link href="/productos" className="hidden md:block">
                 <Button variant="outline" size="sm">VER TODO</Button>
@@ -55,22 +62,36 @@ export default function HomePage() {
           </section>
         </Reveal>
 
-        {/* All Products Preview */}
-        <section className="py-12 px-4 md:px-8 max-w-7xl mx-auto">
-          <Reveal>
-            <h2 className="font-display text-3xl md:text-4xl uppercase tracking-wider mb-12 text-center">
-              COLECCIÓN
-            </h2>
-          </Reveal>
-          <Reveal delay={0.2}>
-            <ProductGrid products={products.slice(0, 8)} />
-          </Reveal>
-          <div className="mt-16 flex justify-center">
-            <Link href="/productos">
-              <Button variant="cta" size="lg">VER CATÁLOGO COMPLETO</Button>
-            </Link>
-          </div>
-        </section>
+        {/* Category Divisions */}
+        {categories.map((category) => {
+          // Group gaming and sistemas together for display if needed
+          const catProducts = category.id === 'gaming' 
+            ? [...getProductsByCategory('gaming'), ...getProductsByCategory('sistemas')]
+            : getProductsByCategory(category.id);
+            
+          if (catProducts.length === 0) return null;
+          
+          return (
+            <section key={category.id} className="py-12 px-4 md:px-8 max-w-7xl mx-auto border-t border-border-subtle/50 mt-12 pt-24 first:mt-0 first:border-0 first:pt-12">
+              <Reveal>
+                <div className="flex justify-between items-end mb-12">
+                  <h2 className="font-display text-3xl md:text-4xl uppercase tracking-wider">
+                    {category.name}
+                  </h2>
+                </div>
+              </Reveal>
+              <Reveal delay={0.2}>
+                <ProductGrid products={catProducts.slice(0, 4)} />
+              </Reveal>
+            </section>
+          );
+        })}
+
+        <div className="mt-16 flex justify-center">
+          <Link href="/productos">
+            <Button variant="cta" size="lg">VER CATÁLOGO COMPLETO</Button>
+          </Link>
+        </div>
 
         {/* Brand Statement */}
         <section className="py-32 px-4 bg-surface-1 mt-24">
@@ -81,7 +102,7 @@ export default function HomePage() {
               </h2>
               <div className="h-px w-24 bg-border-subtle mb-8" />
               <p className="text-text-secondary text-lg md:text-xl leading-relaxed max-w-2xl">
-                No fabricamos ropa, construimos una identidad. Diseñado en las calles de Mar del Plata para aquellos que entienden que el estilo no se compra, se tiene. 
+                No vendemos solo productos, construimos tu setup perfecto. Tecnología seleccionada en Mar del Plata para aquellos que exigen el máximo rendimiento y el mejor diseño.
                 <span className="block mt-4 text-white font-mono tracking-widest text-sm uppercase">Built Different</span>
               </p>
             </div>

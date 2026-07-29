@@ -10,7 +10,7 @@ interface RelatedProductsProps {
   title?: string;
 }
 
-export function RelatedProducts({ products, title = 'COMPLETÁ TU OUTFIT' }: RelatedProductsProps) {
+export function RelatedProducts({ products, title = 'TAMBIÉN TE PUEDE INTERESAR' }: RelatedProductsProps) {
   const scrollRef = useRef<HTMLDivElement>(null);
 
   const scroll = (direction: 'left' | 'right') => {

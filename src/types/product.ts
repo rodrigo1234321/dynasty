@@ -1,4 +1,4 @@
-export type Size = 'S' | 'M' | 'L' | 'XL' | 'XXL';
+export type Size = 'S' | 'M' | 'L' | 'XL' | 'XXL' | 'U';
 
 export interface ProductVariant {
   size: Size;
@@ -13,7 +13,7 @@ export interface Product {
   description: string;
   price: number;
   compareAtPrice?: number;
-  category: 'hoodies' | 'tees' | 'accessories' | 'pants';
+  category: 'audio' | 'energia' | 'gaming' | 'sistemas' | 'cinema' | 'drones' | string;
   images: string[];
   variants: ProductVariant[];
   badge?: 'new-drop' | 'limited' | 'sold-out' | 'restock' | 'exclusive';

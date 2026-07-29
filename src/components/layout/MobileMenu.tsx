@@ -6,7 +6,6 @@ import Link from 'next/link';
 import { X, ChevronRight } from 'lucide-react';
 import { useUIStore } from '@/store/useUIStore';
 import { NAV_LINKS, BRAND } from '@/lib/constants';
-import { cn } from '@/lib/utils';
 
 export function MobileMenu() {
   const { isMobileMenuOpen, toggleMobileMenu } = useUIStore();

@@ -41,7 +41,7 @@ export function HeroBanner() {
           variants={itemVariants}
           className="font-mono text-xs tracking-[0.3em] text-text-secondary uppercase mb-6"
         >
-          STREETWEAR — MAR DEL PLATA
+          TECNOLOGÍA — MAR DEL PLATA
         </motion.p>
         
         <motion.h1 
@@ -55,7 +55,7 @@ export function HeroBanner() {
           variants={itemVariants}
           className="text-text-secondary max-w-md mx-auto mb-10 text-lg"
         >
-          Ropa diseñada para quienes no siguen tendencias. Creamos nuestro propio estándar.
+          Tecnología y gadgets diseñados para quienes no siguen tendencias. Elevamos tu setup al próximo nivel.
         </motion.p>
         
         <motion.div variants={itemVariants}>

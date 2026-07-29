@@ -8,6 +8,7 @@ export interface CartItem {
   size: Size;
   quantity: number;
   image: string;
+  maxStock?: number;
 }
 
 export interface CartState {

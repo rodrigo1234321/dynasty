@@ -1,9 +1,10 @@
+'use client';
+
 import { Reveal } from '@/components/motion/Reveal';
 import { PageTransition } from '@/components/motion/PageTransition';
 import { Button } from '@/components/ui/Button';
 import Link from 'next/link';
 import { Flame, ShieldCheck, Zap } from 'lucide-react';
-import Image from 'next/image';
 
 export default function IdentityPage() {
   return (
@@ -25,7 +26,7 @@ export default function IdentityPage() {
         <section className="py-24 px-4 max-w-4xl mx-auto text-center">
           <Reveal>
             <blockquote className="font-display text-2xl md:text-4xl leading-snug tracking-wide uppercase mb-16">
-              "We don't follow trends.<br className="hidden md:block"/> We set the standard.<br className="hidden md:block"/> DYNASTY is more than a brand — it's a statement."
+              &ldquo;We don&apos;t follow trends.<br className="hidden md:block"/> We set the standard.<br className="hidden md:block"/> DYNASTY is more than a brand — it&apos;s a statement.&rdquo;
             </blockquote>
           </Reveal>
 

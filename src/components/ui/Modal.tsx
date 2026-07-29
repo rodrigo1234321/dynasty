@@ -4,6 +4,7 @@ import * as React from 'react';
 import { createPortal } from 'react-dom';
 import { AnimatePresence, motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
+import { useHydration } from '@/hooks/useHydration';
 
 export interface ModalProps {
   isOpen: boolean;
@@ -28,11 +29,7 @@ export function Modal({
   size = 'md',
 }: ModalProps) {
   const modalRef = React.useRef<HTMLDivElement>(null);
-  const [mounted, setMounted] = React.useState(false);
-
-  React.useEffect(() => {
-    setMounted(true);
-  }, []);
+  const mounted = useHydration();
 
   React.useEffect(() => {
     if (isOpen) {

@@ -1,18 +1,29 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, type FormEvent } from 'react';
 import { useRouter } from 'next/navigation';
 import { PageTransition } from '@/components/motion/PageTransition';
 import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
 import { formatPrice } from '@/lib/utils';
 import { useCartStore } from '@/store/useCartStore';
+import { BRAND } from '@/lib/constants';
+
+type PaymentMethod = 'mercadopago' | 'transferencia' | 'efectivo';
+
+const PAYMENT_LABELS: Record<PaymentMethod, string> = {
+  mercadopago: 'Mercado Pago',
+  transferencia: 'Transferencia bancaria',
+  efectivo: 'Efectivo al retirar',
+};
 
 export default function CheckoutPage() {
   const router = useRouter();
-  const { items, totalPrice } = useCartStore();
+  const { items, totalPrice, clearCart } = useCartStore();
   const [shippingMethod, setShippingMethod] = useState<'delivery' | 'pickup'>('delivery');
-  const [paymentMethod, setPaymentMethod] = useState<'mercadopago' | 'transferencia' | 'efectivo'>('mercadopago');
+  const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>('mercadopago');
+  const [contact, setContact] = useState({ email: '', firstName: '', lastName: '', phone: '' });
+  const [address, setAddress] = useState({ street: '', apartment: '', postalCode: '', city: '', province: '' });
 
   useEffect(() => {
     if (items.length === 0) {
@@ -38,6 +49,35 @@ export default function CheckoutPage() {
   const transferDiscount = paymentMethod === 'transferencia' ? subtotal * 0.15 : 0;
   const total = subtotal + shippingCost - transferDiscount;
 
+  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    const deliveryLine =
+      shippingMethod === 'delivery'
+        ? `Entrega: ${address.street}${address.apartment ? `, ${address.apartment}` : ''}, ${address.city}, ${address.province} (CP ${address.postalCode})`
+        : 'Entrega: retiro por el local (39 y Edison, Mar del Plata)';
+
+    const messageLines = [
+      'Hola! Quiero confirmar este pedido DYNASTY:',
+      '',
+      ...items.map((item) => `• ${item.name} x${item.quantity} — ${formatPrice(item.price * item.quantity)}`),
+      '',
+      `Subtotal: ${formatPrice(subtotal)}`,
+      `Envío: ${shippingMethod === 'pickup' ? 'Retiro en local (gratis)' : formatPrice(shippingCost)}`,
+      ...(transferDiscount > 0 ? [`Descuento transferencia (15%): -${formatPrice(transferDiscount)}`] : []),
+      `Total: ${formatPrice(total)}`,
+      '',
+      `Pago: ${PAYMENT_LABELS[paymentMethod]}`,
+      `Contacto: ${contact.firstName} ${contact.lastName} — ${contact.phone} — ${contact.email}`,
+      deliveryLine,
+    ];
+
+    const whatsappUrl = `https://wa.me/${BRAND.whatsapp}?text=${encodeURIComponent(messageLines.join('\n'))}`;
+
+    window.open(whatsappUrl, '_blank', 'noopener,noreferrer');
+    clearCart();
+  };
+
   return (
     <PageTransition>
       <div className="pt-32 pb-24 px-4 md:px-8 max-w-6xl mx-auto min-h-screen">
@@ -45,7 +85,7 @@ export default function CheckoutPage() {
           CHECKOUT
         </h1>
 
-        <div className="flex flex-col lg:flex-row gap-12 lg:gap-16">
+        <form onSubmit={handleSubmit} className="flex flex-col lg:flex-row gap-12 lg:gap-16">
           {/* Left: Form */}
           <div className="flex-1 space-y-12">
             
@@ -55,12 +95,42 @@ export default function CheckoutPage() {
                 Contacto
               </h2>
               <div className="space-y-4">
-                <Input label="Email" type="email" placeholder="tu@email.com" required />
+                <Input
+                  label="Email"
+                  type="email"
+                  name="email"
+                  placeholder="tu@email.com"
+                  required
+                  value={contact.email}
+                  onChange={(e) => setContact((prev) => ({ ...prev, email: e.target.value }))}
+                />
                 <div className="grid grid-cols-2 gap-4">
-                  <Input label="Nombre" placeholder="Tu nombre" required />
-                  <Input label="Apellido" placeholder="Tu apellido" required />
+                  <Input
+                    label="Nombre"
+                    name="firstName"
+                    placeholder="Tu nombre"
+                    required
+                    value={contact.firstName}
+                    onChange={(e) => setContact((prev) => ({ ...prev, firstName: e.target.value }))}
+                  />
+                  <Input
+                    label="Apellido"
+                    name="lastName"
+                    placeholder="Tu apellido"
+                    required
+                    value={contact.lastName}
+                    onChange={(e) => setContact((prev) => ({ ...prev, lastName: e.target.value }))}
+                  />
                 </div>
-                <Input label="Teléfono" type="tel" placeholder="Código de área + número" required />
+                <Input
+                  label="Teléfono"
+                  type="tel"
+                  name="phone"
+                  placeholder="Código de área + número"
+                  required
+                  value={contact.phone}
+                  onChange={(e) => setContact((prev) => ({ ...prev, phone: e.target.value }))}
+                />
               </div>
             </section>
 
@@ -102,14 +172,48 @@ export default function CheckoutPage() {
 
               {shippingMethod === 'delivery' && (
                 <div className="space-y-4 animate-in fade-in slide-in-from-top-4 duration-300">
-                  <Input label="Calle y altura" placeholder="Ej: Av. Colón 1234" required />
+                  <Input
+                    label="Calle y altura"
+                    name="street"
+                    placeholder="Ej: Av. Colón 1234"
+                    required
+                    value={address.street}
+                    onChange={(e) => setAddress((prev) => ({ ...prev, street: e.target.value }))}
+                  />
                   <div className="grid grid-cols-2 gap-4">
-                    <Input label="Piso / Depto (Opcional)" placeholder="Ej: 3B" />
-                    <Input label="Código Postal" placeholder="Ej: 7600" required />
+                    <Input
+                      label="Piso / Depto (Opcional)"
+                      name="apartment"
+                      placeholder="Ej: 3B"
+                      value={address.apartment}
+                      onChange={(e) => setAddress((prev) => ({ ...prev, apartment: e.target.value }))}
+                    />
+                    <Input
+                      label="Código Postal"
+                      name="postalCode"
+                      placeholder="Ej: 7600"
+                      required
+                      value={address.postalCode}
+                      onChange={(e) => setAddress((prev) => ({ ...prev, postalCode: e.target.value }))}
+                    />
                   </div>
                   <div className="grid grid-cols-2 gap-4">
-                    <Input label="Ciudad" placeholder="Ej: Mar del Plata" required />
-                    <Input label="Provincia" placeholder="Ej: Buenos Aires" required />
+                    <Input
+                      label="Ciudad"
+                      name="city"
+                      placeholder="Ej: Mar del Plata"
+                      required
+                      value={address.city}
+                      onChange={(e) => setAddress((prev) => ({ ...prev, city: e.target.value }))}
+                    />
+                    <Input
+                      label="Provincia"
+                      name="province"
+                      placeholder="Ej: Buenos Aires"
+                      required
+                      value={address.province}
+                      onChange={(e) => setAddress((prev) => ({ ...prev, province: e.target.value }))}
+                    />
                   </div>
                 </div>
               )}
@@ -182,7 +286,7 @@ export default function CheckoutPage() {
                     </div>
                     <div className="flex-1 text-sm">
                       <p className="font-medium uppercase">{item.name}</p>
-                      <p className="text-text-secondary mt-1">Talle: {item.size} | Cantidad: {item.quantity}</p>
+                      <p className="text-text-secondary mt-1">Cantidad: {item.quantity}</p>
                       <p className="font-mono mt-2">{formatPrice(item.price * item.quantity)}</p>
                     </div>
                   </div>
@@ -215,12 +319,15 @@ export default function CheckoutPage() {
                 <span>{formatPrice(total)}</span>
               </div>
 
-              <Button variant="cta" size="lg" fullWidth>
+              <Button type="submit" variant="cta" size="lg" fullWidth>
                 CONFIRMAR PEDIDO
               </Button>
+              <p className="text-center text-xs text-text-muted font-mono mt-3">
+                Te vamos a redirigir a WhatsApp para coordinar el pago y la entrega.
+              </p>
             </div>
           </div>
-        </div>
+        </form>
       </div>
     </PageTransition>
   );

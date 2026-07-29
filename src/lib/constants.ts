@@ -1,32 +1,35 @@
 export const BRAND = {
   name: 'DYNASTY',
-  slogan: 'BUILT DIFFERENT',
+  slogan: 'DYEN_OS',
   monogram: 'DYG',
-  description: 'Streetwear brand from Mar del Plata, Argentina. For those who refuse to conform.',
-  address: 'Calle 39 y Edison, Mar del Plata, Buenos Aires, Argentina',
+  description: 'Tecnología e indumentaria con criterio retro-táctico.',
+  address: 'Mar del Plata, Argentina',
   postalCode: '7600',
-  phone: '+54 223 500 0000',
-  email: 'info@dynasty.ar',
-  whatsapp: '5492235000000',
-  instagram: 'https://instagram.com/dynasty.ar',
+  phone: '+54 9 223 675-1309',
+  email: 'dynasty.nett@gmail.com',
+  whatsapp: '5492236751309',
+  instagram: 'https://instagram.com/dynasty.arg',
   url: 'https://dynasty.ar',
 } as const;
 
 export const CATEGORIES = [
-  { slug: 'all', label: 'ALL PRODUCTS' },
-  { slug: 'hoodies', label: 'HOODIES & SWEATSHIRTS' },
-  { slug: 'tees', label: 'TEES' },
-  { slug: 'pants', label: 'PANTS' },
-  { slug: 'accessories', label: 'ACCESSORIES' },
+  { slug: 'all', label: 'TODAS LAS DIVISIONES' },
+  { slug: 'audio', label: 'DIVISION_AUDIO' },
+  { slug: 'energia', label: 'DIVISION_ENERGÍA' },
+  { slug: 'gaming', label: 'DIVISION_GAMING' },
+  { slug: 'sistemas', label: 'DIVISION_SISTEMAS' },
+  { slug: 'cinema', label: 'DIVISION_CINEMA' },
+  { slug: 'drones', label: 'DIVISION_DRONES' },
 ] as const;
 
 export const NAV_LINKS = [
   { href: '/', label: 'HOME' },
-  { href: '/productos', label: 'ALL PRODUCTS' },
-  { href: '/productos?category=hoodies', label: 'HOODIES & SWEATSHIRTS' },
-  { href: '/productos?category=tees', label: 'TEES' },
-  { href: '/productos?category=accessories', label: 'ACCESSORIES' },
-  { href: '/identidad', label: 'OUR IDENTITY' },
+  { href: '/productos', label: 'CATÁLOGO' },
+  { href: '/productos?category=audio', label: 'AUDIO' },
+  { href: '/productos?category=energia', label: 'ENERGÍA' },
+  { href: '/productos?category=gaming', label: 'GAMING' },
+  { href: '/productos?category=sistemas', label: 'SISTEMAS' },
+  { href: '/identidad', label: 'MANIFIESTO' },
 ] as const;
 
 export const FREE_SHIPPING_THRESHOLD = 120000; // $120,000 ARS
