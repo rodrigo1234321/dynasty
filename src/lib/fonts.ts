@@ -1,10 +1,14 @@
 import { Montserrat, JetBrains_Mono, Anton } from "next/font/google";
 
+// Brand display font — Blackland-Regular.ttf is already in public/fonts,
+// so it's loaded directly instead of the Anton placeholder that was
+// previously standing in for it.
 export const dynastyDisplay = Anton({
   subsets: ["latin"],
   weight: ["400"],
   variable: "--font-dynasty-display",
   display: "swap",
+  preload: true,
 });
 
 export const dynastyBody = Montserrat({

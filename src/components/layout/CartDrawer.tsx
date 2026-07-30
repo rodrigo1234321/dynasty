@@ -6,7 +6,7 @@ import { X, Trash2, Minus, Plus } from 'lucide-react';
 import Link from 'next/link';
 import { useCartStore } from '@/store/useCartStore';
 import { useUIStore } from '@/store/useUIStore';
-import { formatPrice, formatInstallments, getImagePath } from '@/lib/utils';
+import { formatPrice, formatInstallments } from '@/lib/utils';
 import Image from 'next/image';
 
 export function CartDrawer() {
@@ -83,7 +83,7 @@ export function CartDrawer() {
                         <div className="relative w-20 h-24 bg-surface-2 overflow-hidden flex-shrink-0 flex items-center justify-center text-text-muted font-mono text-xs">
                           {item.image ? (
                             <Image 
-                              src={getImagePath(item.image)} 
+                              src={item.image} 
                               alt={item.name} 
                               fill 
                               className="object-cover"

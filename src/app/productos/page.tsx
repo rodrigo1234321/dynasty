@@ -1,6 +1,6 @@
 'use client';
 
-import { Suspense, useState, useEffect } from 'react';
+import { Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { CategoryChips } from '@/components/shop/CategoryChips';
 import { ProductGrid } from '@/components/shop/ProductGrid';
@@ -20,8 +20,11 @@ function CatalogGridSkeleton() {
 }
 
 function CatalogContent() {
+  const router = useRouter();
   const searchParams = useSearchParams();
 
+  // Read the category straight from the URL so links like
+  // /productos?category=audio (used across the site's navigation) actually filter.
   const requestedCategory = searchParams.get('category');
   const activeCategory =
     requestedCategory && CATEGORIES.some((c) => c.slug === requestedCategory)
@@ -31,6 +34,17 @@ function CatalogContent() {
   const filteredProducts =
     activeCategory === 'all' ? products : getProductsByCategory(activeCategory);
 
+  const handleCategoryChange = (category: string) => {
+    const params = new URLSearchParams(searchParams.toString());
+    if (category === 'all') {
+      params.delete('category');
+    } else {
+      params.set('category', category);
+    }
+    const query = params.toString();
+    router.replace(query ? `/productos?${query}` : '/productos', { scroll: false });
+  };
+
   return (
     <div className="pt-32 pb-24 px-4 md:px-8 max-w-7xl mx-auto min-h-screen">
       <header className="mb-12 md:mb-16 text-center">
@@ -38,7 +52,10 @@ function CatalogContent() {
           PRODUCTS
         </h1>
 
-        <CategoryChips activeCategory={activeCategory} />
+        <CategoryChips
+          activeCategory={activeCategory}
+          onCategoryChange={handleCategoryChange}
+        />
       </header>
 
       <div className="mb-6 flex justify-between items-center text-sm font-mono text-text-muted">
@@ -49,7 +66,7 @@ function CatalogContent() {
 
       {filteredProducts.length === 0 && (
         <div className="text-center py-24 text-text-muted">
-          No se encontraron productos en esta categor&iacute;a.
+          No se encontraron productos en esta categoría.
         </div>
       )}
     </div>

@@ -40,6 +40,7 @@ export function Footer() {
             <ul className="space-y-3">
               <li><Link href="/envios" className="text-sm text-text-secondary hover:text-white transition-colors">Shipping Info</Link></li>
               <li><Link href="/contacto" className="text-sm text-text-secondary hover:text-white transition-colors">Contact Us</Link></li>
+              <li><Link href="/devoluciones" className="text-sm text-text-secondary hover:text-white transition-colors">Devoluciones & Cambios</Link></li>
             </ul>
           </div>
 

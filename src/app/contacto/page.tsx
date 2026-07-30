@@ -1,11 +1,15 @@
-'use client';
-
+import type { Metadata } from 'next';
 import Link from 'next/link';
 import { Mail, Phone, AtSign, MessageCircle, MapPin, Clock } from 'lucide-react';
 import { Reveal } from '@/components/motion/Reveal';
 import { PageTransition } from '@/components/motion/PageTransition';
 import { Button } from '@/components/ui/Button';
 import { BRAND } from '@/lib/constants';
+
+export const metadata: Metadata = {
+  title: 'Contacto',
+  description: `Contactate con ${BRAND.name}: WhatsApp, email, Instagram o visitanos en nuestro local de Mar del Plata.`,
+};
 
 export default function ContactPage() {
   return (

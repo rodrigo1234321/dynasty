@@ -2,7 +2,7 @@
 
 import { useState, useRef } from 'react';
 import Image from 'next/image';
-import { cn, getImagePath } from '@/lib/utils';
+import { cn } from '@/lib/utils';
 
 interface ProductGalleryProps {
   images: string[];
@@ -44,7 +44,7 @@ export function ProductGallery({ images, productName }: ProductGalleryProps) {
             }}
           >
             <Image
-              src={getImagePath(currentImage)}
+              src={currentImage}
               alt={`${productName} - Image ${selectedIndex + 1}`}
               fill
               className="object-cover"
@@ -72,7 +72,7 @@ export function ProductGallery({ images, productName }: ProductGalleryProps) {
               )}
             >
               <Image
-                src={getImagePath(img)}
+                src={img}
                 alt={`Thumbnail ${idx + 1}`}
                 fill
                 className="object-cover"

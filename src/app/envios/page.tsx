@@ -1,11 +1,15 @@
-'use client';
-
+import type { Metadata } from 'next';
 import { Truck, Store, Percent } from 'lucide-react';
 import { Reveal } from '@/components/motion/Reveal';
 import { PageTransition } from '@/components/motion/PageTransition';
 import { ShippingCalculator } from '@/components/shop/ShippingCalculator';
 import { formatPrice } from '@/lib/utils';
 import { BRAND, FREE_SHIPPING_THRESHOLD, TRANSFER_DISCOUNT } from '@/lib/constants';
+
+export const metadata: Metadata = {
+  title: 'Envíos',
+  description: `Opciones de envío de ${BRAND.name}: a domicilio en toda Argentina o retiro gratis por nuestro local en Mar del Plata.`,
+};
 
 export default function ShippingPage() {
   return (

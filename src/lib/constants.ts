@@ -1,8 +1,8 @@
 export const BRAND = {
   name: 'DYNASTY',
-  slogan: 'DYEN_OS',
+  slogan: 'BUILT DIFFERENT.',
   monogram: 'DYG',
-  description: 'Tecnología e indumentaria con criterio retro-táctico.',
+  description: 'Tech & gadgets con criterio retro-táctico. Mar del Plata, Argentina.',
   address: 'Mar del Plata, Argentina',
   postalCode: '7600',
   phone: '+54 9 223 675-1309',

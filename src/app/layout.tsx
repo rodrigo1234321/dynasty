@@ -10,6 +10,7 @@ import { CRTPreloader } from "@/components/layout/CRTPreloader";
 import "./globals.css";
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://dynasty.ar"),
   title: {
     default: "DYNASTY — Built Different",
     template: "%s | DYNASTY",

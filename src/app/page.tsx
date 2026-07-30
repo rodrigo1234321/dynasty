@@ -1,5 +1,3 @@
-'use client';
-
 import { HeroBanner } from '@/components/brand/HeroBanner';
 import { ProductGrid } from '@/components/shop/ProductGrid';
 import { Reveal } from '@/components/motion/Reveal';

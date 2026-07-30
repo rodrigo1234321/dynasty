@@ -5,7 +5,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Heart } from 'lucide-react';
-import { cn, formatPrice, formatInstallments, getImagePath } from '@/lib/utils';
+import { cn, formatPrice, formatInstallments } from '@/lib/utils';
 import { Product, Size } from '@/types/product';
 import { useCartStore } from '@/store/useCartStore';
 import { useUIStore } from '@/store/useUIStore';
@@ -58,7 +58,7 @@ export function ProductCard({ product }: { product: Product }) {
       <div className="relative aspect-[3/4] overflow-hidden bg-surface-2">
         {currentImage ? (
           <Image
-            src={getImagePath(currentImage)}
+            src={currentImage}
             alt={product.name}
             fill
             className={cn(
