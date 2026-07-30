@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Automatización n8n — Sincronización DYNASTY</title>
+  <style>
+    :root {
+      --bg: #0b0c10;
+      --card: #12141c;
+      --card-border: #1e2230;
+      --primary: #ea4b71;
+      --accent: #38bdf8;
+      --text: #f1f5f9;
+      --text-muted: #94a3b8;
+      --green: #10b981;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
+    body { background: var(--bg); color: var(--text); padding: 2rem; line-height: 1.6; }
+    .container { max-width: 1000px; margin: 0 auto; }
+    header { background: var(--card); border: 1px solid var(--card-border); padding: 2rem; border-radius: 12px; margin-bottom: 2rem; text-align: center; }
+    header h1 { font-size: 2rem; color: #fff; margin-bottom: 0.5rem; }
+    header p { color: var(--text-muted); font-size: 1rem; }
+    
+    .diagram-container { background: var(--card); border: 1px solid var(--card-border); border-radius: 12px; padding: 2rem; margin-bottom: 2rem; }
+    .diagram-title { font-size: 1.2rem; font-weight: 600; color: #fff; margin-bottom: 1.5rem; border-left: 4px solid var(--primary); padding-left: 0.75rem; }
+    
+    .flow-grid { display: flex; flex-wrap: wrap; items-center: center; justify-content: space-between; gap: 1rem; position: relative; }
+    .node-box { background: #1a1d28; border: 1px solid #2e3446; padding: 1.2rem; border-radius: 10px; width: 210px; text-align: center; position: relative; }
+    .node-box .icon { font-size: 1.8rem; margin-bottom: 0.5rem; }
+    .node-box .title { font-size: 0.95rem; font-weight: 700; color: #fff; margin-bottom: 0.25rem; }
+    .node-box .desc { font-size: 0.8rem; color: var(--text-muted); }
+    .arrow { font-size: 1.5rem; color: var(--accent); font-weight: bold; }
+
+    .step-card { background: var(--card); border: 1px solid var(--card-border); border-radius: 10px; padding: 1.5rem; margin-bottom: 1.5rem; }
+    .step-card h3 { color: var(--accent); font-size: 1.1rem; margin-bottom: 0.75rem; display: flex; align-items: center; gap: 0.5rem; }
+    .step-card ol, .step-card ul { padding-left: 1.25rem; color: var(--text-muted); font-size: 0.95rem; }
+    .step-card li { margin-bottom: 0.5rem; }
+    
+    table { width: 100%; border-collapse: collapse; margin-top: 1rem; font-size: 0.9rem; }
+    th, td { border: 1px solid var(--card-border); padding: 0.75rem; text-align: left; }
+    th { background: #1a1d28; color: #fff; }
+    td { color: var(--text-muted); }
+    
+    code { background: #000; color: #38bdf8; padding: 0.2rem 0.4rem; border-radius: 4px; font-family: monospace; font-size: 0.85rem; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>Automatización DYNASTY — Google Sheets ➔ GitHub</h1>
+      <p>Gestión de productos, categorías, fotos y stock directamente desde tu celular</p>
+    </header>
+
+    <div class="diagram-container">
+      <div class="diagram-title">Diagrama del Flujo de Trabajo en n8n</div>
+      <div class="flow-grid">
+        <div class="node-box">
+          <div class="icon">⏰</div>
+          <div class="title">Schedule Trigger</div>
+          <div class="desc">Cada 15 min / Manual</div>
+        </div>
+        <div class="arrow">➔</div>
+        <div class="node-box">
+          <div class="icon">📊</div>
+          <div class="title">Google Sheets</div>
+          <div class="desc">Lee filas de productos</div>
+        </div>
+        <div class="arrow">➔</div>
+        <div class="node-box">
+          <div class="icon">⚡</div>
+          <div class="title">Transform Code</div>
+          <div class="desc">Genera products.ts en Base64</div>
+        </div>
+        <div class="arrow">➔</div>
+        <div class="node-box">
+          <div class="icon">🚀</div>
+          <div class="title">GitHub API</div>
+          <div class="desc">Pushea commit & desplega</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="step-card">
+      <h3>📋 Estructura de la Planilla en Google Sheets</h3>
+      <p>Crea una hoja de cálculo llamada <strong>DYNASTY Catálogo</strong> con una pestaña llamada <code>Productos</code> y las siguientes columnas en la fila 1:</p>
+      <table>
+        <thead>
+          <tr>
+            <th>Columna</th>
+            <th>Ejemplo</th>
+            <th>Descripción</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td><code>id</code></td><td>DYNE_AUDIO_01</td><td>Identificador único</td></tr>
+          <tr><td><code>slug</code></td><td>jbl-go4-rgb</td><td>URL amigable del producto</td></tr>
+          <tr><td><code>nombre</code></td><td>JBL GO4 RGB</td><td>Nombre completo visible</td></tr>
+          <tr><td><code>descripcion</code></td><td>Bluetooth 5.0 | 7H autonomía</td><td>Especificaciones técnicas</td></tr>
+          <tr><td><code>precio</code></td><td>25500</td><td>Precio en números sin puntos</td></tr>
+          <tr><td><code>categoria</code></td><td>audio</td><td>audio, energia, gaming, etc.</td></tr>
+          <tr><td><code>foto_1</code></td><td>/images/products/go4rgb-1.png</td><td>Link o ruta de la foto principal</td></tr>
+          <tr><td><code>foto_2</code></td><td>/images/products/go4rgb-2.png</td><td>Link o ruta de la segunda foto</td></tr>
+          <tr><td><code>stock</code></td><td>10</td><td>Cantidad disponible</td></tr>
+          <tr><td><code>en_stock</code></td><td>TRUE</td><td>TRUE o FALSE</td></tr>
+          <tr><td><code>destacado</code></td><td>TRUE</td><td>TRUE si aparece en Nuevos Ingresos</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="step-card">
+      <h3>📥 Cómo importar el Workflow en tu n8n</h3>
+      <ol>
+        <li>Abrí tu panel de <strong>n8n</strong>.</li>
+        <li>Hacé clic en <strong>Workflows</strong> ➔ <strong>Import from File</strong>.</li>
+        <li>Seleccioná el archivo <code>workflow-dynasty-stock-sync.json</code> generado en este proyecto.</li>
+        <li>Configurá tus credenciales de <strong>Google Sheets OAuth2</strong> y tu <strong>GitHub Personal Access Token</strong>.</li>
+        <li>Reemplazá <code>ID_DE_TU_GOOGLE_SHEET</code> por el ID de tu planilla.</li>
+        <li>¡Activá el workflow con el interruptor en <strong>Active</strong>!</li>
+      </ol>
+    </div>
+
+  </div>
+</body>
+</html>

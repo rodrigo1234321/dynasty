@@ -1,0 +1,160 @@
+{
+  "name": "DYNASTY - Sincronización de Productos y Stock desde Google Sheets",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "minutes",
+              "minutesInterval": 15
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [0, 0],
+      "id": "schedule-trigger-1",
+      "name": "Ejecutar cada 15 Minutos"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "ID_DE_TU_GOOGLE_SHEET",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "Productos",
+          "mode": "name"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [250, 0],
+      "id": "google-sheets-read",
+      "name": "Leer Productos de Google Sheets",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "google-sheets-cred-id",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Transformar las filas de Google Sheets a products.ts\nconst items = $input.all();\n\nconst rawProducts = items.map(item => {\n  const row = item.json;\n  const images = [];\n  if (row.foto_1) images.push(row.foto_1.trim());\n  if (row.foto_2) images.push(row.foto_2.trim());\n  if (images.length === 0) images.push('/images/products/placeholder.png');\n\n  const stockQty = parseInt(row.stock || '0', 10);\n  const inStock = row.en_stock === true || row.en_stock === 'TRUE' || stockQty > 0;\n\n  return {\n    id: row.id || `DYNE_${(row.categoria || 'GENERIC').toUpperCase()}_${Math.floor(Math.random() * 1000)}`,\n    slug: row.slug || (row.nombre || 'producto').toLowerCase().replace(/[^a-z0-9]+/g, '-'),\n    name: row.nombre || 'Producto sin nombre',\n    description: row.descripcion || '',\n    price: parseFloat(row.precio || 0),\n    compareAtPrice: row.precio_anterior ? parseFloat(row.precio_anterior) : undefined,\n    category: (row.categoria || 'audio').toLowerCase(),\n    images: images,\n    variants: [\n      { size: row.talle || 'U', inStock: inStock, stock: stockQty }\n    ],\n    badge: row.badge || undefined,\n    featured: row.destacado === true || row.destacado === 'TRUE',\n    createdAt: new Date().toISOString()\n  };\n});\n\nconst productsTsContent = `import { Product, ProductVariant } from '@/types/product';\n\nconst defaultVariants: ProductVariant[] = [\n  { size: 'U', inStock: true, stock: 10 }\n];\n\nconst RAW_PRODUCTS: Product[] = ${JSON.stringify(rawProducts, (key, value) => value === undefined ? null : value, 2)};\n\nconst basePath = process.env.NEXT_PUBLIC_BASE_PATH || '';\n\nexport const products: Product[] = RAW_PRODUCTS.map(p => ({\n  ...p,\n  images: p.images.map(img => img.startsWith('http') ? img : \`\${basePath}\${img}\`)\n}));\n\nexport function getProductBySlug(slug: string): Product | undefined {\n  return products.find(p => p.slug === slug);\n}\n\nexport function getProductsByCategory(category: string): Product[] {\n  if (category === 'all') return products;\n  return products.filter(p => p.category === category);\n}\n`;\n\nconst base64Content = Buffer.from(productsTsContent, 'utf-8').toString('base64');\n\nreturn [{ json: { content_base64: base64Content } }];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [500, 0],
+      "id": "code-transform-products",
+      "name": "Transformar a TypeScript (products.ts)"
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "https://api.github.com/repos/rodrigo1234321/dynasty.ar/contents/dynasty-web/src/lib/products.ts",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $credentials.githubApi.accessToken }}"
+            },
+            {
+              "name": "User-Agent",
+              "value": "n8n-DYNASTY-Sync"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [750, 0],
+      "id": "get-github-sha",
+      "name": "Obtener SHA de products.ts en GitHub"
+    },
+    {
+      "parameters": {
+        "method": "PUT",
+        "url": "https://api.github.com/repos/rodrigo1234321/dynasty.ar/contents/dynasty-web/src/lib/products.ts",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $credentials.githubApi.accessToken }}"
+            },
+            {
+              "name": "User-Agent",
+              "value": "n8n-DYNASTY-Sync"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"message\": \"Actualización automática de catálogo y stock desde Google Sheets [n8n]\",\n  \"content\": \"{{ $('Transformar a TypeScript (products.ts)').item.json.content_base64 }}\",\n  \"sha\": \"{{ $json.sha }}\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1000, 0],
+      "id": "update-github-products",
+      "name": "Actualizar products.ts en GitHub"
+    }
+  ],
+  "connections": {
+    "Ejecutar cada 15 Minutos": {
+      "main": [
+        [
+          {
+            "node": "Leer Productos de Google Sheets",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Leer Productos de Google Sheets": {
+      "main": [
+        [
+          {
+            "node": "Transformar a TypeScript (products.ts)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Transformar a TypeScript (products.ts)": {
+      "main": [
+        [
+          {
+            "node": "Obtener SHA de products.ts en GitHub",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Obtener SHA de products.ts en GitHub": {
+      "main": [
+        [
+          {
+            "node": "Actualizar products.ts en GitHub",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  }
+}
