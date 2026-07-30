@@ -6,6 +6,7 @@ import { Footer } from "@/components/layout/Footer";
 import { CartDrawer } from "@/components/layout/CartDrawer";
 import { SearchModal } from "@/components/layout/SearchModal";
 import { WishlistDrawer } from "@/components/layout/WishlistDrawer";
+import { CookieBanner } from "@/components/layout/CookieBanner";
 import { MobileMenu } from "@/components/layout/MobileMenu";
 import { WhatsAppFloat } from "@/components/layout/WhatsAppFloat";
 import { CRTPreloader } from "@/components/layout/CRTPreloader";
@@ -118,6 +119,7 @@ export default function RootLayout({
           <CartDrawer />
           <SearchModal />
           <WishlistDrawer />
+          <CookieBanner />
           <main className="flex-1">{children}</main>
           <Footer />
           <WhatsAppFloat />

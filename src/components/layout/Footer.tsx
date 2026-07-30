@@ -36,17 +36,19 @@ export function Footer() {
 
           {/* Col 3 */}
           <div className="flex flex-col space-y-4">
-            <h4 className="font-display text-white uppercase tracking-wider mb-2">Help</h4>
+            <h4 className="font-display text-white uppercase tracking-wider mb-2">Ayuda & Legales</h4>
             <ul className="space-y-3">
-              <li><Link href="/envios" className="text-sm text-text-secondary hover:text-white transition-colors">Shipping Info</Link></li>
-              <li><Link href="/contacto" className="text-sm text-text-secondary hover:text-white transition-colors">Contact Us</Link></li>
+              <li><Link href="/envios" className="text-sm text-text-secondary hover:text-white transition-colors">Envios & Entregas</Link></li>
+              <li><Link href="/contacto" className="text-sm text-text-secondary hover:text-white transition-colors">Contacto</Link></li>
               <li><Link href="/devoluciones" className="text-sm text-text-secondary hover:text-white transition-colors">Devoluciones & Cambios</Link></li>
+              <li><Link href="/privacidad" className="text-sm text-text-secondary hover:text-white transition-colors font-medium text-white/90">Política de Privacidad</Link></li>
+              <li><Link href="/terminos" className="text-sm text-text-secondary hover:text-white transition-colors font-medium text-white/90">Términos y Condiciones</Link></li>
             </ul>
           </div>
 
           {/* Col 4 */}
           <div className="flex flex-col space-y-4">
-            <h4 className="font-display text-white uppercase tracking-wider mb-2">Contact</h4>
+            <h4 className="font-display text-white uppercase tracking-wider mb-2">Contacto</h4>
             <div className="space-y-3 text-sm text-text-secondary">
               <p>{BRAND.address}</p>
               <p>Email: {BRAND.email}</p>
@@ -58,10 +60,16 @@ export function Footer() {
         {/* Bottom */}
         <div className="border-t border-border-subtle pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
           <p className="text-xs text-text-muted">
-            &copy; {new Date().getFullYear()} Dynasty. All rights reserved.
+            &copy; {new Date().getFullYear()} DYNASTY. Todos los derechos reservados.
           </p>
           
           <div className="flex items-center gap-6">
+            <Link href="/privacidad" className="text-xs text-text-muted hover:text-white transition-colors">
+              Privacidad
+            </Link>
+            <Link href="/terminos" className="text-xs text-text-muted hover:text-white transition-colors">
+              Términos
+            </Link>
             <a href={BRAND.instagram} target="_blank" rel="noopener noreferrer" className="text-xs text-text-muted hover:text-white uppercase tracking-wider transition-colors">
               Instagram
             </a>

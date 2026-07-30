@@ -325,6 +325,16 @@ export default function CheckoutPage() {
               <p className="text-center text-xs text-text-muted font-mono mt-3">
                 Te vamos a redirigir a WhatsApp para coordinar el pago y la entrega.
               </p>
+              <p className="text-center text-[11px] text-text-muted mt-3">
+                Al realizar el pedido, aceptás nuestra{' '}
+                <a href="/privacidad" target="_blank" className="underline text-text-secondary hover:text-white">
+                  Política de Privacidad
+                </a>{' '}
+                y los{' '}
+                <a href="/terminos" target="_blank" className="underline text-text-secondary hover:text-white">
+                  Términos de Servicio
+                </a>.
+              </p>
             </div>
           </div>
         </form>
