@@ -4,6 +4,8 @@ import { ToastProvider } from "@/components/ui/Toast";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { CartDrawer } from "@/components/layout/CartDrawer";
+import { SearchModal } from "@/components/layout/SearchModal";
+import { WishlistDrawer } from "@/components/layout/WishlistDrawer";
 import { MobileMenu } from "@/components/layout/MobileMenu";
 import { WhatsAppFloat } from "@/components/layout/WhatsAppFloat";
 import { CRTPreloader } from "@/components/layout/CRTPreloader";
@@ -114,6 +116,8 @@ export default function RootLayout({
           <Navbar />
           <MobileMenu />
           <CartDrawer />
+          <SearchModal />
+          <WishlistDrawer />
           <main className="flex-1">{children}</main>
           <Footer />
           <WhatsAppFloat />

@@ -7,6 +7,7 @@ import { Menu, Search, Heart, ShoppingBag } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useCartStore } from '@/store/useCartStore';
 import { useUIStore } from '@/store/useUIStore';
+import { useUserStore } from '@/store/useUserStore';
 import { useHydration } from '@/hooks/useHydration';
 
 export function Navbar() {
@@ -16,7 +17,8 @@ export function Navbar() {
   const [lastScrollY, setLastScrollY] = useState(0);
 
   const itemCount = useCartStore((state) => state.itemCount());
-  const { toggleCart, toggleMobileMenu } = useUIStore();
+  const wishlistCount = useUserStore((state) => state.wishlist.length);
+  const { toggleCart, toggleMobileMenu, toggleSearch, toggleWishlistDrawer } = useUIStore();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -54,7 +56,7 @@ export function Navbar() {
       <div className="container mx-auto px-4 w-full h-full grid grid-cols-3 items-center">
         {/* Left */}
         <div className="flex items-center gap-4">
-          <button onClick={toggleMobileMenu} className="p-1 hover:text-primary transition-colors text-white">
+          <button onClick={toggleMobileMenu} className="p-1 hover:text-primary transition-colors text-white" aria-label="Menú navegación">
             <Menu className="w-6 h-6" />
           </button>
           <Link href="/" className="font-display font-black text-xl hidden md:block text-white hover:text-primary transition-colors">
@@ -71,13 +73,43 @@ export function Navbar() {
 
         {/* Right */}
         <div className="flex items-center justify-end gap-3 md:gap-5">
-          <button className="p-1 hover:text-primary transition-colors text-white hidden sm:block">
+          <button 
+            onClick={toggleSearch} 
+            className="p-1 hover:text-primary transition-colors text-white flex items-center justify-center"
+            title="Buscar productos"
+            aria-label="Buscar productos"
+          >
             <Search className="w-5 h-5" />
           </button>
-          <button className="p-1 hover:text-primary transition-colors text-white hidden sm:block">
+
+          <button 
+            onClick={toggleWishlistDrawer} 
+            className="p-1 hover:text-primary transition-colors text-white relative flex items-center justify-center"
+            title="Ver favoritos"
+            aria-label="Ver favoritos"
+          >
             <Heart className="w-5 h-5" />
+            <AnimatePresence>
+              {isHydrated && wishlistCount > 0 && (
+                <motion.span 
+                  initial={{ scale: 0 }}
+                  animate={{ scale: 1 }}
+                  exit={{ scale: 0 }}
+                  key={wishlistCount}
+                  className="absolute -top-1 -right-1 bg-primary text-white text-[10px] w-4 h-4 rounded-full flex items-center justify-center font-mono"
+                >
+                  {wishlistCount}
+                </motion.span>
+              )}
+            </AnimatePresence>
           </button>
-          <button onClick={toggleCart} className="p-1 hover:text-primary transition-colors text-white relative">
+
+          <button 
+            onClick={toggleCart} 
+            className="p-1 hover:text-primary transition-colors text-white relative flex items-center justify-center"
+            title="Ver carrito"
+            aria-label="Ver carrito"
+          >
             <ShoppingBag className="w-5 h-5" />
             <AnimatePresence>
               {isHydrated && itemCount > 0 && (

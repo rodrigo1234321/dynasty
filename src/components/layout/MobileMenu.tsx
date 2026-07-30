@@ -3,12 +3,16 @@
 import React, { useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
-import { X, ChevronRight } from 'lucide-react';
+import { X, ChevronRight, Search, Heart } from 'lucide-react';
 import { useUIStore } from '@/store/useUIStore';
+import { useUserStore } from '@/store/useUserStore';
+import { useHydration } from '@/hooks/useHydration';
 import { NAV_LINKS, BRAND } from '@/lib/constants';
 
 export function MobileMenu() {
-  const { isMobileMenuOpen, toggleMobileMenu } = useUIStore();
+  const isHydrated = useHydration();
+  const { isMobileMenuOpen, toggleMobileMenu, toggleSearch, toggleWishlistDrawer } = useUIStore();
+  const wishlistCount = useUserStore((state) => state.wishlist.length);
 
   useEffect(() => {
     if (isMobileMenuOpen) {
@@ -29,6 +33,16 @@ export function MobileMenu() {
       window.removeEventListener('keydown', handleEscape);
     };
   }, [isMobileMenuOpen, toggleMobileMenu]);
+
+  const handleOpenSearch = () => {
+    toggleMobileMenu();
+    toggleSearch();
+  };
+
+  const handleOpenWishlist = () => {
+    toggleMobileMenu();
+    toggleWishlistDrawer();
+  };
 
   return (
     <AnimatePresence>
@@ -61,8 +75,31 @@ export function MobileMenu() {
               </button>
             </div>
             
+            {/* Quick Actions */}
+            <div className="p-4 border-b border-border-subtle grid grid-cols-2 gap-2 bg-surface-2/30">
+              <button
+                onClick={handleOpenSearch}
+                className="flex items-center justify-center gap-2 p-3 bg-surface-2 border border-border-subtle text-xs font-mono text-white hover:border-primary transition-colors uppercase"
+              >
+                <Search className="w-4 h-4 text-primary" />
+                Buscar
+              </button>
+              <button
+                onClick={handleOpenWishlist}
+                className="flex items-center justify-center gap-2 p-3 bg-surface-2 border border-border-subtle text-xs font-mono text-white hover:border-primary transition-colors uppercase relative"
+              >
+                <Heart className="w-4 h-4 text-primary fill-primary" />
+                Favoritos
+                {isHydrated && wishlistCount > 0 && (
+                  <span className="ml-1 bg-primary text-white text-[10px] px-1.5 py-0.2 rounded-full">
+                    {wishlistCount}
+                  </span>
+                )}
+              </button>
+            </div>
+
             {/* Links */}
-            <div className="flex-1 overflow-y-auto py-4">
+            <div className="flex-1 overflow-y-auto py-2">
               <ul className="flex flex-col">
                 {NAV_LINKS.map((link) => (
                   <li key={link.href}>
