@@ -23,19 +23,11 @@ function CatalogContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  const activeCategory = (() => {
-    const fromSearchParams = searchParams.get('category');
-    if (fromSearchParams && CATEGORIES.some((c) => c.slug === fromSearchParams)) {
-      return fromSearchParams;
-    }
-    if (typeof window !== 'undefined') {
-      const fromURL = new URLSearchParams(window.location.search).get('category');
-      if (fromURL && CATEGORIES.some((c) => c.slug === fromURL)) {
-        return fromURL;
-      }
-    }
-    return 'all';
-  })();
+  const requestedCategory = searchParams.get('category');
+  const activeCategory =
+    requestedCategory && CATEGORIES.some((c) => c.slug === requestedCategory)
+      ? requestedCategory
+      : 'all';
 
   const filteredProducts =
     activeCategory === 'all' ? products : getProductsByCategory(activeCategory);
