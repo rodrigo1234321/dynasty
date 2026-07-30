@@ -57,6 +57,10 @@ export default function ProductDetailClient({ slug }: { slug: string }) {
     toggleCart();
   };
 
+  const relatedProducts = products
+    .filter((p) => p.category === product.category && p.id !== product.id)
+    .slice(0, 4);
+
   const siteUrl = "https://rodrigo1234321.github.io/dynasty";
   const productJsonLd = {
     "@context": "https://schema.org",
