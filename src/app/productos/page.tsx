@@ -68,7 +68,7 @@ function CatalogContent() {
         <span>{filteredProducts.length} PRODUCTOS</span>
       </div>
 
-      <ProductGrid products={filteredProducts} />
+      <ProductGrid key={activeCategory} products={filteredProducts} />
 
       {filteredProducts.length === 0 && (
         <div className="text-center py-24 text-text-muted">
