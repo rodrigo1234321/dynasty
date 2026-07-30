@@ -4,7 +4,7 @@ const defaultVariants: ProductVariant[] = [
   { size: 'U', inStock: true, stock: 10 }
 ];
 
-export const products: Product[] = [
+const RAW_PRODUCTS: Product[] = [
   {
     id: 'DYNE_AUDIO_GO4',
     slug: 'jbl-go4-rgb',
@@ -138,6 +138,13 @@ export const products: Product[] = [
     createdAt: new Date().toISOString(),
   },
 ];
+
+const basePath = process.env.NEXT_PUBLIC_BASE_PATH || '';
+
+export const products: Product[] = RAW_PRODUCTS.map(p => ({
+  ...p,
+  images: p.images.map(img => `${basePath}${img}`)
+}));
 
 export function getProductBySlug(slug: string): Product | undefined {
   return products.find(p => p.slug === slug);
