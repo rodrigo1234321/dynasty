@@ -57,12 +57,28 @@ export default function ProductDetailClient({ slug }: { slug: string }) {
     toggleCart();
   };
 
-  const relatedProducts = products
-    .filter((p) => p.category === product.category && p.id !== product.id)
-    .slice(0, 4);
+  const siteUrl = "https://rodrigo1234321.github.io/dynasty";
+  const productJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    name: product.name,
+    description: product.description,
+    image: product.images.map((img) => (img.startsWith('http') ? img : `${siteUrl}${img}`)),
+    offers: {
+      "@type": "Offer",
+      price: product.price,
+      priceCurrency: "ARS",
+      availability: isAllSoldOut ? "https://schema.org/OutOfStock" : "https://schema.org/InStock",
+      url: `${siteUrl}/productos/${product.slug}`,
+    },
+  };
 
   return (
     <PageTransition>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(productJsonLd) }}
+      />
       <div className="pt-24 pb-24 px-4 md:px-8 max-w-7xl mx-auto">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 mb-24">
           

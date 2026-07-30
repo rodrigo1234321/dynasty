@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Auditoría SEO — DYNASTY</title>
+  <style>
+    :root {
+      --bg: #0b0c10;
+      --card: #12141c;
+      --card-border: #1e2230;
+      --primary: #e63946;
+      --text: #f1f5f9;
+      --text-muted: #94a3b8;
+      --score-yellow: #f59e0b;
+      --score-green: #10b981;
+      --score-red: #ef4444;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
+    body { background: var(--bg); color: var(--text); padding: 2rem; line-height: 1.6; }
+    .container { max-width: 1100px; margin: 0 auto; }
+    header { display: flex; justify-content: space-between; align-items: center; background: var(--card); padding: 2rem; border-radius: 12px; border: 1px solid var(--card-border); margin-bottom: 2rem; }
+    .title-area h1 { font-size: 2rem; color: #fff; margin-bottom: 0.25rem; }
+    .title-area p { color: var(--text-muted); font-size: 0.9rem; }
+    .score-badge { text-align: center; background: rgba(245, 158, 11, 0.1); border: 2px solid var(--score-yellow); padding: 1rem 1.5rem; border-radius: 12px; }
+    .score-badge .score-val { font-size: 2.5rem; font-weight: 800; color: var(--score-yellow); }
+    .score-badge .score-lbl { font-size: 0.75rem; text-transform: uppercase; tracking: 1px; color: var(--text-muted); }
+    
+    .grid-4 { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; margin-bottom: 2rem; }
+    .metric-card { background: var(--card); border: 1px solid var(--card-border); padding: 1.25rem; border-radius: 10px; }
+    .metric-card h3 { font-size: 0.8rem; text-transform: uppercase; color: var(--text-muted); margin-bottom: 0.5rem; }
+    .metric-card .val { font-size: 1.8rem; font-weight: 700; color: #fff; }
+
+    .section-title { font-size: 1.4rem; margin-bottom: 1rem; border-left: 4px solid var(--primary); padding-left: 0.75rem; color: #fff; }
+    
+    .priority-list { margin-bottom: 2.5rem; }
+    .priority-card { background: var(--card); border: 1px solid var(--card-border); border-left: 4px solid var(--score-red); padding: 1.25rem; border-radius: 8px; margin-bottom: 1rem; }
+    .priority-card.warn { border-left-color: var(--score-yellow); }
+    .priority-card h4 { font-size: 1.1rem; color: #fff; margin-bottom: 0.4rem; }
+    .priority-card p { font-size: 0.9rem; color: var(--text-muted); margin-bottom: 0.75rem; }
+    .priority-card code { background: #000; padding: 0.4rem 0.6rem; border-radius: 4px; font-family: monospace; font-size: 0.85rem; color: #38bdf8; display: block; overflow-x: auto; }
+
+    .categories-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.5rem; margin-bottom: 2.5rem; }
+    .cat-card { background: var(--card); border: 1px solid var(--card-border); padding: 1.25rem; border-radius: 10px; }
+    .cat-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem; }
+    .cat-name { font-weight: 600; color: #fff; }
+    .cat-score { font-weight: 700; font-size: 0.95rem; }
+    .progress-bar { width: 100%; height: 6px; background: #1e2230; border-radius: 3px; overflow: hidden; margin-bottom: 1rem; }
+    .progress-fill { height: 100%; border-radius: 3px; }
+
+    .check-item { display: flex; align-items: flex-start; gap: 0.5rem; font-size: 0.85rem; margin-bottom: 0.4rem; color: var(--text-muted); }
+    .status-badge { font-size: 0.7rem; font-weight: 700; padding: 2px 6px; border-radius: 4px; text-transform: uppercase; }
+    .status-ok { background: rgba(16, 185, 129, 0.2); color: var(--score-green); }
+    .status-warn { background: rgba(245, 158, 11, 0.2); color: var(--score-yellow); }
+    .status-err { background: rgba(239, 68, 68, 0.2); color: var(--score-red); }
+
+    footer { text-align: center; color: var(--text-muted); font-size: 0.85rem; margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid var(--card-border); }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="title-area">
+        <h1>Auditoría SEO — DYNASTY</h1>
+        <p>URL: <strong>https://rodrigo1234321.github.io/dynasty/</strong> | Target Keyword: <strong>tecnología</strong></p>
+      </div>
+      <div class="score-badge">
+        <div class="score-val">73</div>
+        <div class="score-lbl">Puntuación SEO Global</div>
+      </div>
+    </header>
+
+    <div class="grid-4">
+      <div class="metric-card">
+        <h3>Puntuación Global</h3>
+        <div class="val" style="color: var(--score-yellow)">73 / 100</div>
+      </div>
+      <div class="metric-card">
+        <h3>Problemas Críticos</h3>
+        <div class="val" style="color: var(--score-red)">3</div>
+      </div>
+      <div class="metric-card">
+        <h3>Advertencias</h3>
+        <div class="val" style="color: var(--score-yellow)">4</div>
+      </div>
+      <div class="metric-card">
+        <h3>Tests Aprobados</h3>
+        <div class="val" style="color: var(--score-green)">14</div>
+      </div>
+    </div>
+
+    <h2 class="section-title">Top 5 Correcciones Prioritarias</h2>
+    <div class="priority-list">
+      <div class="priority-card">
+        <h4>1. Archivos Técnicos Ausentes (robots.txt y sitemap.xml)</h4>
+        <p>GoogleBot no dispone de un sitemap para rastrear las rutas del catálogo ni de un robots.txt para conocer las reglas de indexación.</p>
+        <code>Crear src/app/robots.ts y src/app/sitemap.ts con la estructura dinámica de rutas de Next.js.</code>
+      </div>
+
+      <div class="priority-card">
+        <h4>2. Sin Datos Estructurados Schema.org (JSON-LD)</h4>
+        <p>No se incluye Schema para la Organización ni para los Productos. Esto impide obtener Rich Snippets (precios, stock, marca) en los resultados de Google.</p>
+        <code>Agregar esquemas JSON-LD (Organization, LocalBusiness y Product) en layout.tsx y páginas de producto.</code>
+      </div>
+
+      <div class="priority-card warn">
+        <h4>3. Title Tag Corto y Sin la Keyword Principal "Tecnología"</h4>
+        <p>El título actual es "DYNASTY — Built Different" (23 caracteres). Es demasiado corto (se recomienda 50-60) y no optimiza para la búsqueda objetivo.</p>
+        <code>Modificar el título por: "DYNASTY — Tecnología & Setup Built Different | Mar del Plata"</code>
+      </div>
+
+      <div class="priority-card warn">
+        <h4>4. Falta Tag Canónico (&lt;link rel="canonical"&gt;)</h4>
+        <p>Al estar desplegado en GitHub Pages con posibles parámetros de búsqueda (`?category=...`), se requiere una etiqueta canónica para evitar contenido duplicado.</p>
+        <code>Configurar en layout.tsx: alternates: { canonical: 'https://rodrigo1234321.github.io/dynasty/' }</code>
+      </div>
+
+      <div class="priority-card warn">
+        <h4>5. Optimización de Imágenes a Formatos Modernos (WebP)</h4>
+        <p>Las imágenes del catálogo están en formato PNG tradicional. Convertirlas o servirlas optimizadas mejorará el score de Core Web Vitals.</p>
+        <code>Servir imágenes comprimidas en WebP/AVIF.</code>
+      </div>
+    </div>
+
+    <h2 class="section-title">Desglose por Categoría</h2>
+    <div class="categories-grid">
+
+      <div class="cat-card">
+        <div class="cat-header">
+          <span class="cat-name">1. Meta Tags</span>
+          <span class="cat-score" style="color: var(--score-yellow)">72%</span>
+        </div>
+        <div class="progress-bar"><div class="progress-fill" style="width: 72%; background: var(--score-yellow)"></div></div>
+        <div class="check-item"><span class="status-badge status-warn">WARN</span> Title corto y sin keyword "tecnología"</div>
+        <div class="check-item"><span class="status-badge status-ok">OK</span> Meta Description presente</div>
+        <div class="check-item"><span class="status-badge status-err">ERR</span> Falta Canonical Tag</div>
+        <div class="check-item"><span class="status-badge status-ok">OK</span> Viewport e Idioma (es) correctos</div>
+      </div>
+
+      <div class="cat-card">
+        <div class="cat-header">
+          <span class="cat-name">2. Headings (H1-H6)</span>
+          <span class="cat-score" style="color: var(--score-green)">80%</span>
+        </div>
+        <div class="progress-bar"><div class="progress-fill" style="width: 80%; background: var(--score-green)"></div></div>
+        <div class="check-item"><span class="status-badge status-ok">OK</span> Un solo H1 por página</div>
+        <div class="check-item"><span class="status-badge status-warn">WARN</span> Keyword principal fuera del tag H1</div>
+        <div class="check-item"><span class="status-badge status-ok">OK</span> Jerarquía H2/H3 consistente</div>
+      </div>
+
+      <div class="cat-card">
+        <div class="cat-header">
+          <span class="cat-name">3. Imágenes</span>
+          <span class="cat-score" style="color: var(--score-green)">85%</span>
+        </div>
+        <div class="progress-bar"><div class="progress-fill" style="width: 85%; background: var(--score-green)"></div></div>
+        <div class="check-item"><span class="status-badge status-ok">OK</span> 100% imágenes tienen atributo ALT</div>
+        <div class="check-item"><span class="status-badge status-warn">WARN</span> Formatos PNG (se sugiere WebP)</div>
+      </div>
+
+      <div class="cat-card">
+        <div class="cat-header">
+          <span class="cat-name">4. Enlaces</span>
+          <span class="cat-score" style="color: var(--score-green)">90%</span>
+        </div>
+        <div class="progress-bar"><div class="progress-fill" style="width: 90%; background: var(--score-green)"></div></div>
+        <div class="check-item"><span class="status-badge status-ok">OK</span> Enlaces internos 100% funcionales</div>
+        <div class="check-item"><span class="status-badge status-ok">OK</span> Enlaces externos con rel="noopener"</div>
+      </div>
+
+      <div class="cat-card">
+        <div class="cat-header">
+          <span class="cat-name">5. Open Graph & Social</span>
+          <span class="cat-score" style="color: var(--score-green)">80%</span>
+        </div>
+        <div class="progress-bar"><div class="progress-fill" style="width: 80%; background: var(--score-green)"></div></div>
+        <div class="check-item"><span class="status-badge status-ok">OK</span> Meta tags og:title y og:description</div>
+        <div class="check-item"><span class="status-badge status-warn">WARN</span> OG Image requiere URL absoluta completa</div>
+      </div>
+
+      <div class="cat-card">
+        <div class="cat-header">
+          <span class="cat-name">6. Schema.org / Datos Estructurados</span>
+          <span class="cat-score" style="color: var(--score-red)">30%</span>
+        </div>
+        <div class="progress-bar"><div class="progress-fill" style="width: 30%; background: var(--score-red)"></div></div>
+        <div class="check-item"><span class="status-badge status-err">ERR</span> Sin JSON-LD de Organization / LocalBusiness</div>
+        <div class="check-item"><span class="status-badge status-err">ERR</span> Sin JSON-LD de Productos</div>
+      </div>
+
+      <div class="cat-card">
+        <div class="cat-header">
+          <span class="cat-name">7. Técnico & Velocidad</span>
+          <span class="cat-score" style="color: var(--score-yellow)">65%</span>
+        </div>
+        <div class="progress-bar"><div class="progress-fill" style="width: 65%; background: var(--score-yellow)"></div></div>
+        <div class="check-item"><span class="status-badge status-ok">OK</span> Respuesta servidor rápida (0.33s)</div>
+        <div class="check-item"><span class="status-badge status-err">ERR</span> Falta sitemap.xml</div>
+        <div class="check-item"><span class="status-badge status-err">ERR</span> Falta robots.txt</div>
+      </div>
+
+      <div class="cat-card">
+        <div class="cat-header">
+          <span class="cat-name">8. Contenido</span>
+          <span class="cat-score" style="color: var(--score-green)">85%</span>
+        </div>
+        <div class="progress-bar"><div class="progress-fill" style="width: 85%; background: var(--score-green)"></div></div>
+        <div class="check-item"><span class="status-badge status-ok">OK</span> Conteo >400 palabras en Home</div>
+        <div class="check-item"><span class="status-badge status-ok">OK</span> Menciones claras a Mar del Plata y tecnología</div>
+      </div>
+
+    </div>
+
+    <footer>
+      Auditoría SEO realizada automáticamente para DYNASTY — https://rodrigo1234321.github.io/dynasty/
+    </footer>
+  </div>
+</body>
+</html>
