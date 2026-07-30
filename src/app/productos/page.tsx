@@ -1,6 +1,6 @@
 'use client';
 
-import { Suspense } from 'react';
+import { Suspense, useState, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { CategoryChips } from '@/components/shop/CategoryChips';
 import { ProductGrid } from '@/components/shop/ProductGrid';
@@ -24,15 +24,27 @@ function CatalogContent() {
   const searchParams = useSearchParams();
 
   const requestedCategory = searchParams.get('category');
-  const activeCategory =
+  const initialCategory =
     requestedCategory && CATEGORIES.some((c) => c.slug === requestedCategory)
       ? requestedCategory
       : 'all';
+
+  const [activeCategory, setActiveCategory] = useState(initialCategory);
+
+  useEffect(() => {
+    const current = searchParams.get('category');
+    if (current && CATEGORIES.some((c) => c.slug === current)) {
+      setActiveCategory(current);
+    } else {
+      setActiveCategory('all');
+    }
+  }, [searchParams]);
 
   const filteredProducts =
     activeCategory === 'all' ? products : getProductsByCategory(activeCategory);
 
   const handleCategoryChange = (category: string) => {
+    setActiveCategory(category);
     const params = new URLSearchParams(searchParams.toString());
     if (category === 'all') {
       params.delete('category');
