@@ -41,7 +41,7 @@ export function HeroBanner() {
           variants={itemVariants}
           className="font-mono text-xs tracking-[0.3em] text-text-secondary uppercase mb-6"
         >
-          TECNOLOGÍA — MAR DEL PLATA
+          TECNOLOGÍA - MAR DEL PLATA
         </motion.p>
         
         <motion.h1 

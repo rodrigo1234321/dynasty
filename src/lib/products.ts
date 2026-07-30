@@ -127,8 +127,8 @@ export const products: Product[] = [
   },
   {
     id: 'DYNE_DRONES_DRN01',
-    slug: 'drone-gen-rico',
-    name: 'Drone genérico',
+    slug: 'drone-generico',
+    name: 'Drone Genérico HD',
     description: 'Cámara HD | Wi-Fi 2.4 GHz | 2 baterías recargables incluidas',
     price: 53400,
     category: 'drones',

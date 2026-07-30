@@ -53,7 +53,7 @@ export default function HomePage() {
                   ¿Estás en Mar del Plata?
                 </h3>
                 <p className="text-text-secondary">
-                  Retirá gratis por nuestro local — <span className="text-white font-medium">39 y Edison</span>
+                  Retirá gratis por nuestro local - <span className="text-white font-medium">39 y Edison</span>
                 </p>
               </div>
             </div>
