@@ -1,6 +1,6 @@
 'use client';
 
-import { Suspense, useState, useEffect } from 'react';
+import { Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { CategoryChips } from '@/components/shop/CategoryChips';
 import { ProductGrid } from '@/components/shop/ProductGrid';
@@ -23,30 +23,24 @@ function CatalogContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  // Read the category straight from the URL so links like
-  // /productos?category=audio (used across the site's navigation) actually filter.
-  const requestedCategory = searchParams.get('category');
-  const initialCategory =
-    requestedCategory && CATEGORIES.some((c) => c.slug === requestedCategory)
-      ? requestedCategory
-      : 'all';
-
-  const [activeCategory, setActiveCategory] = useState(initialCategory);
-
-  useEffect(() => {
-    const rc = searchParams.get('category');
-    if (rc && CATEGORIES.some((c) => c.slug === rc)) {
-      setActiveCategory(rc);
-    } else if (!rc) {
-      setActiveCategory('all');
+  const activeCategory = (() => {
+    const fromSearchParams = searchParams.get('category');
+    if (fromSearchParams && CATEGORIES.some((c) => c.slug === fromSearchParams)) {
+      return fromSearchParams;
     }
-  }, [searchParams]);
+    if (typeof window !== 'undefined') {
+      const fromURL = new URLSearchParams(window.location.search).get('category');
+      if (fromURL && CATEGORIES.some((c) => c.slug === fromURL)) {
+        return fromURL;
+      }
+    }
+    return 'all';
+  })();
 
   const filteredProducts =
     activeCategory === 'all' ? products : getProductsByCategory(activeCategory);
 
   const handleCategoryChange = (category: string) => {
-    setActiveCategory(category);
     const params = new URLSearchParams(searchParams.toString());
     if (category === 'all') {
       params.delete('category');
